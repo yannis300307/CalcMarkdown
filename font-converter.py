@@ -1,28 +1,27 @@
 import base64
 import math
-import zlib
 from PIL import Image
 
 def compress(d):
-  fd=""
-  l=""
-  c=1
-  for ci in range(len(d)+1):
-    if ci==len(d):
-      i=""
+  final_data=""
+  last=""
+  count=1
+  for current_index in range(len(d)+1):
+    if current_index==len(d):
+      char=""
     else:
-      i=d[ci]
-    if l==i:
-      c+=1
+      char=d[current_index]
+    if last==char and count < 4095 :
+      count+=1
     else:
-      co=str(c)
-      if c>5:
-        fd+="°"+(3-len(co))*"0"+co+str(l)
+      co=hex(count)[2:]
+      if count>5:
+        final_data+="°"+(3-len(co))*"0"+co+str(last)
       else:
-        fd+=l*c
-      c=1
-    l=i
-  return fd
+        final_data+=last*count
+      count=1
+    last=char
+  return final_data
 
 file_name = input("file ? ")
 lines_count = int(input("lines count ? "), )
@@ -36,8 +35,12 @@ line_height = img.height // lines_count
 print("width:" , img.width)
 print("height:", line_height)
 
+y_offset = 1
+
 for i in range(lines_count):
-    current_line = img.crop((0, i*line_height, img.width, i*line_height+line_height))
+    current_line = img.crop((0, i*line_height + y_offset, img.width, i*line_height+line_height+y_offset))
+
+    current_line.show()
 
     data = 0
     j=0
@@ -47,8 +50,6 @@ for i in range(lines_count):
                 data |= (1<<j)
 
             j+=1
-
-    current_line
 
     print(f"line{i}=\""+compress(base64.b64encode(data.to_bytes(int(math.log2(data)+1), "big")).decode())+"\"")
 
