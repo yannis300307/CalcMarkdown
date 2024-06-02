@@ -1,0 +1,2 @@
+https://gist.github.com/trondhumbor/ce57c0c2816bb45a8fbb
+https://github.com/oliverbaileysmith/zlib-decompress
