@@ -103,7 +103,7 @@ print(json.dumps(letters_points))
 for i in letters_points.keys():
     normalised = [(round(i[0]/500*255), round(i[1]/500*255)) for i in letters_points[i]]
 
-    letters_points[i] = ".".join([str(i[0])+"."+str(i[1]) for i in normalised])
+    letters_points[i] = ".".join([hex(i[0])[2:]+"."+hex(i[1])[2:] for i in normalised])
 
 print()
 print()
